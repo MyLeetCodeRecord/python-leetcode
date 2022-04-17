@@ -1,15 +1,12 @@
 import unittest
 
-from .q889 import Solution, TreeNode
+from .build import TreeNode, Solution
 
 
-class TestSolution(unittest.TestCase):
-    def test_fake(self):
-        self.assertEqual(1, 2-1)
-
-    def test_build(self):
+class MyTestCase(unittest.TestCase):
+    def test_constructFromPrePost(self):
         cases = [
-            ([1, 2, 4, 5, 3, 6, 7],  [4, 5, 2, 6, 7, 3, 1], [1, 2, 3, 4, 5, 6, 7]),
+            ([1, 2, 4, 5, 3, 6, 7], [4, 5, 2, 6, 7, 3, 1], [1, 2, 3, 4, 5, 6, 7]),
             ([1, ], [1, ], [1, ])
         ]
 

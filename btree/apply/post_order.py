@@ -115,5 +115,47 @@ class Solution:
         lookup(root)
         return self.result
 
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        """
+        236. 二叉树的最近公共祖先
+        https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/
+        """
+        if root is None:
+            return None
+        if root == p or root == q:
+            return root
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+        if left is not None and right is not None:
+            return root
+        elif left is not None:
+            return left
+        elif right is not None:
+            return right
+        return None
+
+    def trimBST(self, root: Optional[TreeNode], low: int, high: int) -> Optional[TreeNode]:
+        """
+        669. 修剪二叉搜索树
+        https://leetcode-cn.com/problems/trim-a-binary-search-tree/
+        """
+        if root is None:
+            return None
+        root.left = self.trimBST(root.left, low, high)
+        root.right = self.trimBST(root.right, low, high)
+        if root.val < low or root.val > high:
+            if root.left is None and root.right is None:
+                return None
+            elif root.left is None:
+                return root.right
+            elif root.right is None:
+                return root.left
+
+            cur = root.right
+            while cur.left:
+                cur = cur.left
+            cur.left = root.left
+            return root.right
+        return root
 
 

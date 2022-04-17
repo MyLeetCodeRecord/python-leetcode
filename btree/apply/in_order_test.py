@@ -1,68 +1,67 @@
 import unittest
-from .pre_order import Solution, TreeNode
+
+from .in_order import TreeNode, Solution
 
 
 class MyTestCase(unittest.TestCase):
-    def test_invertTree(self):
+    def setUp(self) -> None:
+        self.s = Solution()
+
+    def test_isValidBST(self):
         cases = (
-            ([4, 2, 7, 1, 3, 6, 9], [4, 7, 2, 9, 6, 3, 1]),
+            ([2, 1, 3], True),
         )
-
-        s = Solution()
-
-        for (i, case) in enumerate(cases):
-            with self.subTest(i=i):
-                root = TreeNode.buildFromLevel(case[0])
-                actual = s.invertTree(root)
-                exepct = TreeNode.buildFromLevel(case[1])
-                self.assertEqual(exepct, actual)
-
-    def test_countNodes(self):
-        cases = (
-            ([1, 2, 3, 4, 5, 6], 6),
-        )
-        s = Solution()
         for (i, case) in enumerate(cases):
             with self.subTest(i=i):
                 root = TreeNode.buildFromLevel(case[0])
                 expect = case[1]
-                actual = s.countNodes(root)
+                actual = self.s.isValidBST(root)
                 self.assertEqual(expect, actual)
 
-    def test_binaryTreePaths(self):
+    def test_isValidBST2(self):
         cases = (
-            ([1, 2, 3, None, 5], ["1->2->5", "1->3"]),
+            ([2, 1, 3], True),
+            ([-2147483648, ], True)
         )
-        s = Solution()
         for (i, case) in enumerate(cases):
             with self.subTest(i=i):
                 root = TreeNode.buildFromLevel(case[0])
                 expect = case[1]
-                actual = s.binaryTreePaths(root)
+                actual = self.s.isValidBST2(root)
                 self.assertEqual(expect, actual)
 
-    def test_pathSum(self):
+    def test_findMode(self):
         cases = (
-            ([5, 4, 8, 11, None, 13, 4, 7, 2, None, None, None, None, 5, 1], 22, [[5, 4, 11, 2], [5, 8, 4, 5]]),
+            ([1, None, 2, None, None, 2], [2, ]),
         )
-        s = Solution()
+        for (i, case) in enumerate(cases):
+            with self.subTest(i=i):
+                root = TreeNode.buildFromLevel(case[0])
+                expect = case[1]
+                actual = self.s.findMode(root)
+                self.assertEqual(expect, actual)
+
+    def test_lowestCommonAncestor(self):
+        cases = (
+            ([3, 5, 1, 6, 2, 0, 8, None, None, 7, 4], TreeNode(val=5), TreeNode(val=4),),
+        )
+
+        for (i, case) in enumerate(cases):
+            with self.subTest(i=i):
+                root = TreeNode.buildFromLevel(case[0])
+                expect = case[1]
+                actual = self.s.findMode(root)
+                self.assertEqual(expect, actual)
+
+    def test_getNumber(self):
+        cases = (
+            ([3, 1, 4, None, 2, None, 5], [[1, 2, 4], [1, 1, 3], [0, 3, 5]], 2),
+        )
         for (i, case) in enumerate(cases):
             with self.subTest(i=i):
                 root = TreeNode.buildFromLevel(case[0])
                 expect = case[2]
-                actual = s.pathSum(root, case[1])
-                self.assertEqual(expect, actual)
-
-    def test_isValidBST(self):
-        cases = (
-            ([5, 4, 6, None, None, 3, 7], False),
-        )
-        s = Solution()
-        for (i, case) in enumerate(cases):
-            with self.subTest(i=i):
-                root = TreeNode.buildFromLevel(case[0])
-                expect = case[1]
-                actual = s.isValidBST(root)
+                actual = self.s.getNumber(root, case[1])
                 self.assertEqual(expect, actual)
 
 

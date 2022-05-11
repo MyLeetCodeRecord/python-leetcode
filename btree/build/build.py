@@ -10,6 +10,7 @@ class Solution:
     2. 前序是刚进入节点时, 就做记录
         后序是准备离开节点时做记录
     """
+
     def constructFromPrePost(self, preorder: List[int], postorder: List[int]) -> TreeNode:
         """
         889. 根据前序和后序遍历构造二叉树
@@ -29,13 +30,13 @@ class Solution:
             node = TreeNode(val=preorder[i])
             # 由于是在压栈之前做判断, 因此会遗漏最后一轮的后序退出
             # 最终stack中会有剩余数据, 其中stack[0]为root
-            while len(stack) > 0 and stack[len(stack)-1].val == postorder[j]:
+            while len(stack) > 0 and stack[len(stack) - 1].val == postorder[j]:
                 stack.pop()
                 j += 1
-            if stack[len(stack)-1].left is None:
-                stack[len(stack)-1].left = node
+            if stack[len(stack) - 1].left is None:
+                stack[len(stack) - 1].left = node
             else:
-                stack[len(stack)-1].right = node
+                stack[len(stack) - 1].right = node
             stack.append(node)
         # 如果再这里再补一份出栈, 最终stack为空
         return stack[0]
@@ -47,7 +48,7 @@ class Solution:
 
         inorder 和 postorder 都由 不同 的值组成
         """
-        if len(inorder) == 0 or len(postorder)==0:
+        if len(inorder) == 0 or len(postorder) == 0:
             return None
         root = TreeNode(val=postorder[-1])
         midIdx = inorder.index(root.val)
@@ -56,8 +57,8 @@ class Solution:
         leftPostOrder = postorder[0:len(leftInOrder)]
         root.left = self.buildTree(leftInOrder, leftPostOrder)
 
-        rightInOrder = inorder[midIdx+1:]
-        rightPostOrder = postorder[len(leftInOrder):len(leftInOrder)+len(rightInOrder)]
+        rightInOrder = inorder[midIdx + 1:]
+        rightPostOrder = postorder[len(leftInOrder):len(leftInOrder) + len(rightInOrder)]
         root.right = self.buildTree(rightInOrder, rightPostOrder)
 
         return root
@@ -68,17 +69,17 @@ class Solution:
         https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
         """
         if len(preorder) == 0 or len(inorder) == 0:
-            return  None
+            return None
 
         root = TreeNode(val=preorder[0])
         midIdx = inorder.index(root.val)
 
         leftInOrder = inorder[:midIdx]
-        leftPreOrder = preorder[1:1+len(leftInOrder)]
+        leftPreOrder = preorder[1:1 + len(leftInOrder)]
         root.left = self.buildTree2(leftPreOrder, leftInOrder)
 
-        rightInOrder = inorder[midIdx+1:]
-        rightPreOrder = preorder[1+len(leftInOrder):]
+        rightInOrder = inorder[midIdx + 1:]
+        rightPreOrder = preorder[1 + len(leftInOrder):]
         root.right = self.buildTree2(rightPreOrder, rightInOrder)
 
         return root
@@ -100,6 +101,44 @@ class Solution:
 
         root = TreeNode(val=_max)
         root.left = self.constructMaximumBinaryTree(nums[:idx])
-        root.right = self.constructMaximumBinaryTree(nums[idx+1:])
+        root.right = self.constructMaximumBinaryTree(nums[idx + 1:])
 
         return root
+
+
+class Codec:
+    """
+    449. 序列化和反序列化二叉搜索树
+    https://leetcode.cn/problems/serialize-and-deserialize-bst/
+
+    由于是 二叉搜索树, 自带排序属性.
+    因此可以直接推断出中序遍历.
+    构建树, 可以 前+中 或者 后+中, 因此序列化只需要关注 前 或 后.
+    """
+
+    def serialize(self, root: TreeNode) -> str:
+        arr = []
+
+        def postOrder(root: TreeNode) -> None:
+            if root is None:
+                return
+            postOrder(root.left)
+            postOrder(root.right)
+            arr.append(root.val)
+
+        postOrder(root)
+        return ' '.join(map(str, arr))  # 左 右 中
+
+    def deserialize(self, data: str) -> TreeNode:
+        arr = list(map(int, data.split()))
+
+        def construct(lower: int, upper: int) -> TreeNode:
+            if arr == [] or arr[-1] < lower or arr[-1] > upper:
+                return None
+            val = arr.pop()  # 后续遍历, 序列的最后一个一定是(子)树的root,
+            root = TreeNode(val)
+            root.right = construct(val, upper)  # 必须先右后左, 序列化结果的反向; 同时限定好最小值边界.
+            root.left = construct(lower, val)  # 执行最大值边界, 保证左子树的最大值 不超过根节点.
+            return root
+
+        return construct(-1, 10001)

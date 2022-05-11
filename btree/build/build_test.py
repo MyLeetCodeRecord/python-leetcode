@@ -1,6 +1,7 @@
 import unittest
 
 from .build import TreeNode, Solution
+from .build import Codec
 
 
 class MyTestCase(unittest.TestCase):
@@ -17,6 +18,19 @@ class MyTestCase(unittest.TestCase):
                 actual = s.constructFromPrePost(case[0], case[1])
                 expect = TreeNode.buildFromLevel(case[2])
                 self.assertEqual(expect, actual)
+
+    def test_Codec(self):
+        cases = [
+            [2, 1, 3],
+            [],
+        ]
+        codec = Codec()
+        for (i, case) in enumerate(cases):
+            with self.subTest(i=i):
+                tree = TreeNode.buildFromLevel(case)
+                ser = codec.serialize(tree)
+                deser = codec.deserialize(ser)
+                self.assertEqual(tree, deser)
 
 
 if __name__ == '__main__':

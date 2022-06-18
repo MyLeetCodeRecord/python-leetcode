@@ -64,6 +64,38 @@ class MyTestCase(unittest.TestCase):
                 actual = self.s.getNumber(root, case[1])
                 self.assertEqual(expect, actual)
 
+    def test_inorderSuccessor(self):
+        cases = (
+            ("basic", [2, 1, 3], 1, 2),
+            ("basic 2", [5, 3, 6, 2, 4, None, None, 1], 6, None),
+            ("fix 1", [5, 3, 6, 1, 4, None, None, None, 2], 4, 5),
+        )
+        for (i, case) in enumerate(cases):
+            with self.subTest(i=i):
+                root = TreeNode.buildFromLevel(case[1])
+                p = TreeNode(val=case[2])
+                expect = case[3]
+                actual = self.s.inorderSuccessor(root, p)
+                if expect is None:
+                    self.assertIsNone(actual, case[0])
+                else:
+                    self.assertEqual(case[3], actual.val, case[0])
+
+    def test_inorderSuccessor_1(self):
+        cases = (
+            ("fix 1", [6, 2, 8, 0, 4, 7, 9, None, None, 3, 5], 3, 4),
+        )
+        for (i, case) in enumerate(cases):
+            with self.subTest(i=i):
+                root = TreeNode.buildFromLevel(case[1])
+                p = TreeNode(val=case[2])
+                expect = case[3]
+                actual = self.s.inorderSuccessor_1(root, p)
+                if expect is None:
+                    self.assertIsNone(actual, case[0])
+                else:
+                    self.assertEqual(case[3], actual.val, case[0])
+
 
 if __name__ == '__main__':
     unittest.main()

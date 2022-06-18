@@ -285,3 +285,41 @@ class Solution:
 
         return root
 
+    def isUnivalTree(self, root: TreeNode) -> bool:
+        """
+        965. 单值二叉树
+        https://leetcode.cn/problems/univalued-binary-tree/
+        """
+        res = set()
+
+        def travel(root: TreeNode):
+            if root is None:
+                return
+            res.add(root.val)
+            travel(root.left)
+            travel(root.right)
+
+        travel(root)
+        return len(res) == 0
+
+    def sumRootToLeaf(self, root: Optional[TreeNode]) -> int:
+        """
+        1022. 从根到叶的二进制数之和
+        https://leetcode.cn/problems/sum-of-root-to-leaf-binary-numbers/
+        """
+        self.ans = 0
+
+        def travel(root: TreeNode, curr: int):
+            if root is None:
+                # self.ans += curr
+                return
+            curr = (curr << 1) + root.val
+            if root.left is None and root.right is None:
+                self.ans += curr
+                return
+            travel(root.left, curr)
+            travel(root.right, curr)
+        
+        travel(root, 0)
+
+        return self.ans

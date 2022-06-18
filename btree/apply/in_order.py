@@ -197,6 +197,22 @@ class Solution:
                 break
         return root
 
+    def lowestCommonAncestor3(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        """
+        236. 二叉树的最近公共祖先
+        https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/
+
+        区别于二叉搜索树, 没有大小性质可以利用, 只能全遍历
+        """
+        if root is None:
+            return root
+        if root == p or root == q:
+            return root
+
+
+
+
+
     def convertBST(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         """
         538. 把二叉搜索树转换为累加树
@@ -254,4 +270,63 @@ class Solution:
                 cnt += 1
 
         return cnt
+
+    def inorderSuccessor(self, root: TreeNode, p: TreeNode) -> TreeNode:
+        """
+        面试题 04.06. 后继者
+        https://leetcode.cn/problems/successor-lcci/
+
+        先利用二叉搜索树性质, 找到目标节点
+        有右子树的, 用由子树的最左边节点
+        没有右子树, 用"父节点"
+            父节点不一定大于自己, 因此需要存下链路
+        没有父节点, 返回None
+        """
+
+        parents = []
+        curr = root
+        while curr is not None:
+            if curr.val == p.val:
+                break;
+            elif curr.val > p.val:
+                parents.append(curr)
+                curr = curr.left
+            else:
+                parents.append(curr)
+                curr = curr.right
+        if curr is None:
+            return None
+        if curr.right is None:
+            while len(parents) > 0:
+                parent = parents.pop()
+                if parent.val > curr.val:
+                    return parent
+            return None
+        curr = curr.right
+        while curr.left is not None:
+            curr = curr.left
+        return curr
+
+    def inorderSuccessor_1(self, root: TreeNode, p: TreeNode) -> TreeNode:
+        """
+        面试题 04.06. 后继者
+        https://leetcode.cn/problems/successor-lcci/
+
+        也可以不用完整的存链路, 只要节点比p的值大, 就更新
+        存下最底层的那个即可
+        """
+        if p.right:
+            curr = p.right
+            while curr.left:
+                curr = curr.left
+            return curr
+        curr = root
+        successor = None
+        while curr:
+            if curr.val > p.val:
+                successor = curr
+                curr = curr.left
+            else:
+                curr = curr.right
+        return successor
 

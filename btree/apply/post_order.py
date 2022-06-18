@@ -1,5 +1,5 @@
 from typing import List, Optional
-from collections import  deque
+from collections import deque, defaultdict
 
 from btree import TreeNode
 
@@ -28,7 +28,7 @@ class Solution:
         deq = deque()
         deq.append(root)
         depth = 0
-        while len(deq)>0:
+        while len(deq) > 0:
             size = len(deq)
             depth += 1
             for _ in range(size):
@@ -50,10 +50,10 @@ class Solution:
         right = self.minDepth(root.right)
 
         if root.left is None:
-            return 1+right
+            return 1 + right
         if root.right is None:
-            return 1+left
-        return 1+min(left, right)
+            return 1 + left
+        return 1 + min(left, right)
 
     def isBalanced(self, root: TreeNode) -> bool:
         """
@@ -79,7 +79,7 @@ class Solution:
             if not rightResult:
                 return 0, False
 
-            if abs(leftDepth-rightDepth) > 1:
+            if abs(leftDepth - rightDepth) > 1:
                 return 0, False
             return 1 + max(leftDepth, rightDepth), True
 
@@ -158,4 +158,34 @@ class Solution:
             return root.right
         return root
 
+    def findFrequentTreeSum(self, root: TreeNode) -> List[int]:
+        """
+        508. 出现次数最多的子树元素和
+        https://leetcode.cn/problems/most-frequent-subtree-sum/
+        """
+        cnt_map = defaultdict(int)
 
+        def traval(node):
+            if node is None:
+                return 0
+            if node.left is None and node.right is None:
+                cnt_map[node.val] = cnt_map[node.val] + 1
+                return node.val
+            left = traval(node.left)
+            right = traval(node.right)
+            s = left + right + node.val
+            cnt_map[s] = cnt_map[s] + 1
+            return s
+
+        traval(root)
+        curr_cnt = 0
+        for _, cnt in cnt_map.items():
+            if cnt > curr_cnt:
+                curr_cnt = cnt
+
+        ret = []
+        for s, cnt in cnt_map.items():
+            if cnt == curr_cnt:
+                ret.append(s)
+
+        return ret

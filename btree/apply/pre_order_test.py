@@ -65,6 +65,19 @@ class MyTestCase(unittest.TestCase):
                 actual = s.isValidBST(root)
                 self.assertEqual(expect, actual)
 
+    def test_sumRootToLeaf(self):
+        cases = (
+            ([1, 0, 1, 0, 1, 0, 1], 22),
+            ([1, 1], 3)
+        )
+        s = Solution()
+        for (i, case) in enumerate(cases):
+            with self.subTest(i=1):
+                root = TreeNode.buildFromLevel(case[0])
+                expect = case[1]
+                actual = s.sumRootToLeaf(root)
+                self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()

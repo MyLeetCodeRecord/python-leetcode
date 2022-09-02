@@ -1,5 +1,5 @@
+from collections import defaultdict, deque
 from typing import List, Optional
-from collections import deque, defaultdict
 
 from btree import TreeNode
 
@@ -189,3 +189,22 @@ class Solution:
                 ret.append(s)
 
         return ret
+    def longestUnivaluePath(self, root: Optional[TreeNode]) -> int:
+        """
+        687. 最长同值路径
+        https://leetcode.cn/problems/longest-univalue-path/
+        """        
+        self.max = 0
+        def post_travel(node):
+            if node is None:
+                return 0
+            left, right = post_travel(node.left), post_travel(node.right)
+
+            left1 = left + 1 if node.left and node.left.val == node.val else 0
+            right1 = right + 1 if node.right and node.right.val == node.val else 0
+
+            self.max = max(self.max, left1+right1)
+            return max(left1, right1)
+        post_travel(root)
+        return self.max
+                
